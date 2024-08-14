@@ -1,0 +1,8 @@
+1|Interested
+2|Applied
+3|Phone interview
+4|On-site interview
+5|Received offer
+6|Accepted offer
+7|Declined offer
+8|No job offer

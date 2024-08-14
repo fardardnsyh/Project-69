@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table id="archived-jobs-table" class="table">
+
+  <!-- HEADERS -->
+  <thead>
+    <tr>
+      <th scope="col" style="width: 20%"><a href="javascript:SortTable(0, 'T');">Company</a></th>
+      <th scope="col" style="width: 20%"><a href="javascript:SortTable(1, 'T');">Job</a></th>
+      <th scope="col" style="width: 20%"><a href="javascript:SortTable(2, 'T');">Status</a></th>
+      <th scope="col" style="width: 10%"><a href="javascript:SortTable(3, 'D');">Date</a></th>
+      <th scope="col" style="width: 20%"><a href="javascript:SortTable(4, 'T');">Notes</a></th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+  {% for job, company in all_archived.items() %}
+    <tr>
+
+      <!-- COMPANY NAME -->
+      <td>
+          <a href="/dashboard/companies/{{ company.company_id }}">{{ company.name }}</a>
+      </td>
+
+      <!-- JOB TITLE -->
+      <td>
+        <a href="/dashboard/jobs/{{ job.jobs.job_id }}">
+          {{ job.jobs.title }}
+        </a>
+      </td>
+      
+      <!-- STATUS -->
+      <td>{{ job.job_codes.description }}</td>
+      
+      <!-- DATE -->
+      <td>{{ job.date_created.strftime('%b-%-d') }}</td>
+      
+      <!-- NOTES -->
+      <td>{{ job.jobs.notes if job.jobs.notes != None else "" }}</td>
+    
+    </tr>
+  {% endfor %}
+
+</table>
+
+  <script src="/static/js/jobs-archive.js" type="text/javascript"></script>
+{% endblock %}

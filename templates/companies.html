@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table id="companies-table" class="table">
+
+  <!-- HEADERS -->
+    <thead>
+      <tr>
+        <th scope="col"><a href="javascript:SortTable(0, 'T');">Company</a></th>
+        <th scope="col"><a href="javascript:SortTable(1, 'N');">Jobs Tracked</a></th>
+        <th scope="col"><a href="javascript:SortTable(2, 'T');">Notes</a></th>
+      </tr>
+    </thead>
+
+  <!-- COMPANIES -->
+    <tbody>
+    {% for company, count in companies.items() %}
+
+      <tr>
+      <!-- COMPANY NAME -->
+      <td>
+        <a href="/dashboard/companies/{{ company.company_id }}">
+          {{ company.name }}
+        </a>
+      </td>
+
+      <!-- JOBS TRACKED -->
+      <td>
+        {{ count }}
+      </td>
+
+      <!-- NOTES -->
+      <td>
+        {{ company.notes if company.notes != None else "" }}
+      </td>
+
+  {% endfor %}
+  </tbody>
+</table>
+
+  <script src="/static/js/companies.js" type="text/javascript"></script>
+
+{% endblock %}

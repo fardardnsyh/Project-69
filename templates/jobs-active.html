@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table id="active-jobs-table" class="table" style="empty-cells: show;">
+  <!-- TABLE HEADERS -->
+  <thead>
+    <tr>
+      <th scope="col" style="width: 15%">
+        <a href="javascript:SortTable(0, 'T');">Company</a>
+      </th>
+      <th scope="col" style="width: 15%">
+        <a href="javascript:SortTable(1, 'T');">Job</a>
+      </th>
+      <th scope="col" style="width: 10%">
+        <a href="javascript:SortTable(2, 'T');">Status</a>
+      </th>
+      <th scope="col" style="width: 10%; text-align: center">
+        <a href="javascript:SortTable(3, 'mdy');">Date</a>
+      </th>
+      <th scope="col" style="width: 15%">
+        <a href="javascript:SortTable(4, 'T');">Task</a>
+      </th>
+      <th scope="col" style="width: 10%; text-align: center">
+        <a href="javascript:SortTable(5, 'mdy');">Due</a>
+      </th>
+    </tr>
+  </thead>
+
+  <!-- TABLE ROWS -->
+  <tbody>
+    {% for status in all_active_status %}
+      <tr>
+        <!-- COMPANY NAME -->
+        <td>
+          <a href="/dashboard/companies/{{ status.jobs.companies.company_id }}">{{ status.jobs.companies.name }}</a>
+        </td>
+
+        <!-- JOB TITLE -->
+        <td>
+          <a href="/dashboard/jobs/{{ status.jobs.job_id }}">
+            {{ status.jobs.title }}
+          </a>
+        </td>
+
+        <!-- DROP DOWN STATUS MENU -->
+        <td>
+          <div class="dropdown">
+            <form action="/dashboard/job-status" method="POST">
+
+              <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="{{  status.job_codes.job_code }}">
+                {{ status.job_codes.description }}
+              </button>
+
+              <div id="dropdownMenuItems" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <input type="hidden" name="job_id" value="{{ status.job_id }}">
+
+                <button class="dropdown-item submit" type="submit" name="job_code" value="1">
+                  Interested
+                </button>
+
+                <button class="dropdown-item submit" type="submit" name="job_code" value="2">
+                  Applied
+                </button>
+
+                <button class="dropdown-item submit" type="submit" name="job_code" value="3">
+                  Phone interview
+                </button>
+
+                <button class="dropdown-item submit" type="submit" name="job_code" value="4">
+                  On-site interview
+                </button>
+
+                <button class="dropdown-item submit" type="submit" name="job_code" value="5">
+                  Received offer
+                </button>
+
+                <button class="dropdown-item submit" type="submit" name="job_code" value="6">
+                  Accepted offer
+                </button>
+
+                <button class="dropdown-item submit" type="submit" name="job_code" value="7">
+                  Declined offer
+                </button>
+
+                <button class="dropdown-item submit" type="submit" name="job_code" value="8">
+                  No job offer
+                </button>
+              
+              </div>
+            </form>
+          </div>
+        </td>
+
+        <!-- DATE LAST MODIFIED -->
+        <td style="text-align: center">
+          {{ status.date_created.strftime('%b-%-d') }}
+        </td>
+
+        <!-- TODO -->
+        <td>
+          {% for todo in all_todos %}
+          
+            {% if todo.job_event_id == status.job_event_id %}
+              <span id="archiveTask">{{ todo.todo_codes.description }}</span>
+              <div style="height: 100%; position: relative;"></div>
+            {% else %}
+              <div style="height: 100%; position: relative;"></div>
+            {% endif %}
+          
+          {% endfor %}
+        </td>
+      
+        <td style="text-align: center">
+          {% for todo in all_todos %}
+
+            {% if todo.job_event_id == status.job_event_id %}
+              <span style="text-align: center" id="archiveDueDate">{{ todo.date_due.strftime('%b-%-d') }}</span><br>
+              <form style="text-align: center" class="form-inline pull-left" id="submitTaskArchive" action="/dashboard/archive-task" method="POST">
+                <button id="archiveButton" class="btn" type="submit">
+                  <input id="todo-id-field" type="hidden" name="todo_id" value="{{ todo.todo_id }}">
+                  <i class="fas fa-archive"></i>
+                </button>
+              </form>
+              <form style="text-align: center" class="form-inline pull-left" id="submitCalendarEvent" action="/dashboard/calendar-event" method="POST">
+                <button id="calendarEventButton" class="btn" type="submit">
+                  <input id="todo-field" type="hidden" name="todo_id" value="{{ todo.todo_id }}">
+                  <i class="fas fa-calendar-plus"></i>
+                </button>
+              </form>
+              <div style="height: 100%; position: relative;"></div>
+            {% else %}
+              <div style="height: 100%; position: relative;"></div>
+            {% endif %}
+          
+          {% endfor %}
+        </td>
+
+      </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+  <script src="/static/js/jobs-active.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    $(document).on('submit', '#submitTaskArchive', sendArchiveTask);
+    $(document).on('submit', '#submitCalendarEvent', sendCalendarEvent);
+  </script>
+
+{% endblock %}

@@ -1,0 +1,9 @@
+1|Apply to job|2
+2|Follow up on job application|30
+3|Send thank you notes or questions to interviewer(s)|1
+4|Review job offer and respond with questions, acceptance, negotiation, or decline|2
+5|Send thank you notes, notify company and current employer, update LinkedIn|7
+6|Send thanks you notes and notify company|7
+7|Archive job|7
+8|Follow up with preferred means of communication|7
+9|Send thank you note|2

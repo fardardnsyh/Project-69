@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<table id="contacts-table" class="table">
+  <!-- HEADERS -->
+  <thead>
+    <tr>
+      <th scope="col" style="width: 15%"><a href="javascript:SortTable(0, 'T');">First</a></th>
+      <th scope="col" style="width: 15%"><a href="javascript:SortTable(1, 'T');">Last</a></th>
+      <th scope="col" style="width: 20%"><a href="javascript:SortTable(2, 'T');">Company</a></th>
+      <th scope="col" style="width: 25%"><a href="javascript:SortTable(3, 'T');">Task</a></th>
+      <th scope="col" style="width: 15%"><a href="javascript:SortTable(4, 'D');">Due Date</a></th>
+    </tr>
+  </thead>
+
+  <!-- CONTACTS -->
+  <tbody>
+    {% for contact in contacts %}
+      <tr>
+
+        <!-- FIRST NAME -->
+        <td>
+          <a href="/dashboard/contacts/{{ contact.contact_id }}">
+            {{ contact.fname }}
+          </a>
+        </td>
+
+        <!-- LAST NAME -->
+        <td>
+          <a href="/dashboard/contacts/{{ contact.contact_id }}">
+            {{ contact.lname }}
+          </a>
+        </td>
+
+        <!-- COMPANY NAME -->
+        <td>
+          <a href="/dashboard/companies/{{ contact.companies.company_id }}">
+            {{ contact.companies.name }}
+          </a>
+        </td>
+        
+        <!-- TODO -->
+        <td class="active-task">
+          {% for todo in all_todos %}
+            {% if todo.contact_events.contact_id == contact.contact_id %}
+              <span id="archiveTask">{{ todo.todo_codes.description }}</span>
+            {% else %}
+              {{ "" }}
+            {% endif %}
+          {% endfor %}
+        </td>
+
+        <td class="task-due-date">
+          {% for todo in all_todos %}
+            {% if todo.contact_events.contact_id == contact.contact_id %}
+              <span id="archiveDueDate">{{ todo.date_due.strftime('%b-%-d') }}</span>
+              <form class="form-inline pull-left" id="submitTaskArchive" action="/dashboard/archive-task" method="POST">
+                <button id="archiveButton" class="btn" type="submit">
+                  <input id="todo-id-field" type="hidden" name="todo_id" value="{{ todo.todo_id }}">
+                  <i class="fas fa-archive"></i>
+                </button>
+              </form>
+            {% else %}
+              {{ "" }}
+            {% endif %}
+          {% endfor %}
+        </td>
+      </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+  <script src="/static/js/contacts.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    $('#submitTaskArchive').on('submit', sendArchiveTask);
+  </script>
+
+
+{% endblock %}
